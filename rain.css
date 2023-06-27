@@ -16,6 +16,7 @@
     margin: 0 2px;
     border-radius: 100%;
     transform-origin: bottom;
+    transform: translateZ(0);
     animation: animate 5s linear;
     user-select: none;
 }
