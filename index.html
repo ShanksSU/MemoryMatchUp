@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>memory match up</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="rain.css">
+        <script src="script.js" defer></script>
+        <script src="rainAnimation.js" defer></script>
+    </head>
+    <body class="bg-rainbow-anim">
+        <div class="rain" id="rain"></div>
+        <div class="game">
+            <div class="controls">
+                <button class="start-btn">Start</button>
+                <button class="reset-btn">Reset</button>
+                <button class="mode-btn">F</button>
+                <div class="stats">
+                    <div class="custom-select">
+                        <label for="dimension-select">Game Size:</label>
+                        <select id="dimension-select">
+                            <!-- <option value="2">2x2</option> -->
+                            <option value="4" selected>4x4</option>
+                            <option value="6">6x6</option>
+                        </select>
+                    </div>
+                    <div class="timer">Time: 0 sec</div>
+                    <div class="moves">0 moves</div>
+                </div>
+            </div>
+            <div class="board-container">
+                <div class="boardSet" data-dimension="4"></div>
+                <div class="win">You win!</div>
+            </div>
+        </div>
+    </body>
+</html>

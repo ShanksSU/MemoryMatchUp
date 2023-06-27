@@ -1,0 +1,39 @@
+.rain {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.rain img {
+    position: absolute;
+    top: 0;
+    width: 100px;
+    height: 100px;
+    margin: 0 2px;
+    border-radius: 100%;
+    transform-origin: bottom;
+    animation: animate 5s linear;
+    user-select: none;
+}
+
+@keyframes animate {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        transform: translateY(1000px) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(1500px) scale(1);
+        opacity: 1;
+    }
+}
