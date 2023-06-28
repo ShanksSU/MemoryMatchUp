@@ -65,7 +65,7 @@ const setupGameBoard = () => {
         throw new Error("The dimension of the board must be an even number.");
     }
 
-    const totalImages = 12;
+    const totalImages = 32;
     const imageUrls = Array.from({ length: totalImages }, (_, i) => `img/anime/${String(i + 1).padStart(2, '0')}.jpg`);
 
     const totalBgImages = 3;
