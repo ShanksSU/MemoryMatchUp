@@ -17,10 +17,11 @@ const state = {
     totalTime: 0,
     loop: null,
     oldDimensions: 4,
-    modeNum: 0
+    modeNum: 0,
+    ismodeEnabled: false
 };
 
-const initState = () => {
+const resetGameState = () => {
     state.gameStarted = false;
     state.totalFlips = 0;
     state.totalTime = 0;
@@ -28,7 +29,7 @@ const initState = () => {
     clearInterval(state.loop);
 };
 
-const shuffle = array => {
+const shuffleArray = array => {
     const clonedArray = [...array];
 
     for (let i = clonedArray.length - 1; i > 0; i--) {
@@ -42,7 +43,7 @@ const shuffle = array => {
     return clonedArray;
 };
 
-const pickRandom = (array, items) => {
+const pickRandomElements = (array, items) => {
     const clonedArray = [...array];
     const randomPicks = [];
 
@@ -57,27 +58,18 @@ const pickRandom = (array, items) => {
 };
 
 
-const generateGame = () => {
+const setupGameBoard = () => {
     state.oldDimensions = parseInt(selectors.dimensionSelect.value);
     let dimensions = state.oldDimensions;
     if (dimensions % 2 !== 0) {
         throw new Error("The dimension of the board must be an even number.");
     }
 
-    const imageUrls = [
-        'img/anime/01.jpg',
-        'img/anime/02.jpg',
-        'img/anime/03.jpg',
-        'img/anime/04.jpg',
-        'img/anime/05.jpg',
-        'img/anime/06.jpg',
-        'img/anime/07.jpg',
-        'img/anime/08.jpg',
-        'img/anime/09.jpg',
-        'img/anime/10.jpg',
-        'img/anime/11.jpg',
-        'img/anime/12.jpg'
-    ];
+    const totalImages = 12;
+    const imageUrls = Array.from({ length: totalImages }, (_, i) => `img/anime/${String(i + 1).padStart(2, '0')}.jpg`);
+
+    const totalBgImages = 3;
+    const bgImage = `img/card/${(Math.floor(Math.random() * totalBgImages) + 1).toString().padStart(2, '0')}.jpg`;
 
     if (imageUrls.length < dimensions * dimensions / 2) {
         const repeatImageUrls = [];
@@ -89,9 +81,9 @@ const generateGame = () => {
         imageUrls.push(...repeatImageUrls);
     }
 
-    const items = pickRandom(imageUrls, dimensions * dimensions / 2);
+    const items = pickRandomElements(imageUrls, dimensions * dimensions / 2);
     const cards = items.concat(items);
-    const shuffledCards = shuffle(cards);
+    const shuffledCards = shuffleArray(cards);
 
     selectors.board.innerHTML = '';
     const boardElement = document.createElement('div');
@@ -102,8 +94,9 @@ const generateGame = () => {
         const fileName = cardPath.match(/\/([^/]+)$/)[1];
         const cardElement = document.createElement('div');
         cardElement.classList.add('card');
+        
         cardElement.innerHTML = `
-            <div class="card-front"></div>
+            <div class="card-front" style="background-image: url('${bgImage}');"></div>
             <div class="card-back">
                 <img src="${cardPath}" alt="${fileName}" data-id="${fileName}">
             </div>
@@ -156,7 +149,7 @@ const originalJS = () => {
             pickedImages = [];
         }
     }
-    items = shuffle([...items, ...items]);
+    items = shuffleArray([...items, ...items]);
 
     const cards = `
         <div class="board" style="grid-template-columns: repeat(${dimensions}, auto)">
@@ -188,7 +181,6 @@ const startGame = () => {
 
         state.loop = setInterval(() => {
             state.totalTime++;
-
             selectors.moves.innerText = `${state.totalFlips} moves`;
             selectors.timer.innerText = `Time: ${state.totalTime} sec`;
         }, 1000);
@@ -197,14 +189,14 @@ const startGame = () => {
 
 const resetGame = () => {
     flipBackCards();
-    initState();
+    resetGameState();
     selectors.start.classList.remove('disabled');
     selectors.boardContainer.classList.remove('flipped');
+    selectors.reset.classList.add('disabled');
     selectors.moves.innerText = '0 moves';
     selectors.timer.innerText = 'Time: 0 sec';
     setTimeout(() => {
-        generateGame();
-        attachEventListeners();
+        setupGameBoard();
     }, 500);
 };
 
@@ -247,31 +239,33 @@ const flipCard = card => {
                         </span>
                     `;
                     clearInterval(state.loop);
-                }, 1000);
+                }, 500);
             }
         }, 1000);
     }
 };
 
-const attachEventListeners = () => {
+const registerGameEventListeners = () => {
     selectors.reset.classList.add('disabled');
     let ismodeEnabled = false;
     document.addEventListener('click', event => {
         const eventTarget = event.target;
         const eventParent = eventTarget.parentElement;
-        if(ismodeEnabled) {
+        if(ismodeEnabled)
             createRaindrop();
-        }
+
         if (eventTarget.className.includes('card') && !eventParent.className.includes('flipped') && state.gameStarted) {
             flipCard(eventParent);
-        } else if (eventTarget.className.includes('card') && !eventParent.className.includes('flipped') && state.gameStarted === false) {
-            alert('Please start the game before flipping a card!');
         } else if (eventTarget.className === 'start-btn' && !eventTarget.className.includes('disabled')) {
             startGame();
         } else if (eventTarget.className === 'reset-btn' && !eventTarget.className.includes('disabled')) {
             resetGame();
         } else if (eventTarget.className === 'mode-btn') {
             ismodeEnabled = !ismodeEnabled;
+            // if(ismodeEnabled)
+            //     state.modeNum = 2000;
+            // else
+            //     state.modeNum = 0;
             selectors.modeBtn.textContent = ismodeEnabled ? "T" : "F";
         }
     });
@@ -279,11 +273,9 @@ const attachEventListeners = () => {
     selectors.dimensionSelect.addEventListener('change', () => {
         if (state.oldDimensions !== parseInt(selectors.dimensionSelect.value)) {
             resetGame();
-            generateGame();
-            attachEventListeners();
         }
     });
 };
 
-generateGame();
-attachEventListeners();
+setupGameBoard();
+registerGameEventListeners();
