@@ -6,7 +6,10 @@ const selectors = {
     start: document.querySelector('.start-btn'),
     reset: document.querySelector('.reset-btn'),
     modeBtn: document.querySelector('.mode-btn'),
-    dimensionSelect: document.querySelector('#dimension-select'),
+    dimensionSelect: document.querySelector('.dimension-select'),
+    infoModal: document.querySelector(".infoModal"),
+    msgBtn: document.querySelector(".show"),
+    closeBtn: document.getElementById('closeModal'),
     win: document.querySelector('.win')
 };
 
@@ -267,6 +270,10 @@ const registerGameEventListeners = () => {
             // else
             //     state.modeNum = 0;
             selectors.modeBtn.textContent = ismodeEnabled ? "T" : "F";
+        } else if (eventTarget.className === 'show') {
+            selectors.infoModal.showModal();
+        } else if (eventTarget.className === 'closeModal') {
+            selectors.infoModal.close();
         }
     });
 
@@ -276,6 +283,14 @@ const registerGameEventListeners = () => {
         }
     });
 };
+
+document.querySelector('.infoModal').innerHTML = `
+    <p>This website is intended for research and information sharing purposes only.</p>
+    <p>The images contained on this website are not owned by the author.</p>
+    <p>If there is any copyright infringement, please contact the author immediately</p>
+    <p>and the author will promptly remove the website.</p>
+    <p>To close, simply press the "<a href="#" class="closeModal">Esc</a>" key.</p>
+`;
 
 setupGameBoard();
 registerGameEventListeners();
