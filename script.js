@@ -181,8 +181,8 @@ const startGame = () => {
 
         state.loop = setInterval(() => {
             state.totalTime++;
-            selectors.moves.innerText = `${state.totalFlips} moves`;
             selectors.timer.innerText = `Time: ${state.totalTime} sec`;
+            selectors.moves.innerText = `Moves: ${state.totalFlips} step`;
         }, 1000);
     }, state.modeNum);
 };
@@ -193,8 +193,8 @@ const resetGame = () => {
     selectors.start.classList.remove('disabled');
     selectors.boardContainer.classList.remove('flipped');
     selectors.reset.classList.add('disabled');
-    selectors.moves.innerText = '0 moves';
     selectors.timer.innerText = 'Time: 0 sec';
+    selectors.moves.innerText = 'Moves: 0 step';
     setTimeout(() => {
         setupGameBoard();
     }, 500);
